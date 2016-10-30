@@ -193,12 +193,12 @@ public class DronDlQuery {
     protected PrintStream setupOutputStream() {
 	PrintStream s = null;
 
-	if (cl.hasOption("file")) {
+	if (cl.hasOption("output")) {
 	    try {
-		File f = new File(cl.getOptionValue("file"));
+		File f = new File(cl.getOptionValue("output"));
 		s = new PrintStream(f);
 	    } catch (IOException ioe) {
-		System.err.println("Could not create output file " + cl.getOptionValue("file"));
+		System.err.println("Could not create output file " + cl.getOptionValue("output"));
 		ioe.printStackTrace();
 		System.out.println("Using standard output instead.");
 	    }
