@@ -1,0 +1,5 @@
+edu/ufl/bmi/ontology/dronquery/AnnotationExtractor.class
+edu/ufl/bmi/ontology/dronquery/DlQueryExecutor.class
+edu/ufl/bmi/ontology/dronquery/DronDlQuery.class
+edu/ufl/bmi/ontology/dronquery/DronDlQueryTranslator.class
+edu/ufl/bmi/App.class

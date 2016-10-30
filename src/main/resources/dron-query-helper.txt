@@ -1,0 +1,15 @@
+'drug product'	DRON_00000005
+'packaged drug product'	DRON_00000027
+'is bearer of'	BFO_0000053
+has_proper_part	ro.owl#has_proper_part
+'beta blocker'	DRON_00020323
+'ca channel blocker'	DRON_00020325
+'proton pump inhibitor'	DRON_00020324
+anti-hypertensive	DRON_00000034
+'mu agonist'	DRON_00000037
+'mu antagonist'	DRON_00000036
+analgesic	DRON_00000035
+anti-malarial	DRON_00000033
+'ACE inhibitor'	DRON_00723853
+ARB	DRON_00724207
+RxCui	DRON_00010000
