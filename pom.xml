@@ -18,16 +18,21 @@
             <argument>-Xms2G</argument>
             <argument>-Xmx4G</argument>
             <argument>-XX:NewRatio=3</argument>
-            <argument>-XX:+PrintGCTimeStamps</argument>
-            <argument>-XX:+PrintGCDetails</argument>
-            <argument>-Xloggc:gc.log</argument>
+            <!--<argument>-XX:+PrintGCTimeStamps</argument>
+            <argument>-XX:+PrintGCDetails</argument> 
+            <argument>-Xloggc:gc.log</argument> -->
             <argument>-classpath</argument>
             <classpath/>
             <argument>edu.ufl.bmi.ontology.dronquery.DronDlQuery</argument>
 	    <argument>-purl</argument>
 	    <argument>http://purl.obolibrary.org/obo/dron.owl</argument>
 	    <argument>-query</argument>
-	    <argument>"'drug product' and ('is bearer of' some anti-hypertensive)"</argument>
+	    <!--<argument>"'drug product' and ('is bearer of' some anti-hypertensive)"</argument>
+	    <argument>-output</argument>
+	    <argument>anti-hypertensive-rxcuis.txt</argument> -->
+	    <argument>"'packaged drug product' and (has_proper_part some ('drug product' and (has_proper_part some ('has granular part' some ('is bearer of' some 'ca channel blocker')))))"</argument>
+	    <argument>-output</argument>
+	    <argument>ca-channel-blocker-ndcs.txt</argument>
           </arguments>
         </configuration>
  </plugin>
