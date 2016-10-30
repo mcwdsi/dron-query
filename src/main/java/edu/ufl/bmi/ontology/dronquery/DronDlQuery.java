@@ -1,5 +1,9 @@
 package edu.ufl.bmi.ontology.dronquery;
 
+import java.io.File;
+import java.io.PrintStream;
+import java.io.IOException;
+import java.util.Set;
 
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.Option;
@@ -17,6 +21,9 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLAnnotation;
+
+import static org.semanticweb.owlapi.search.EntitySearcher.getAnnotationObjects;
 
 public class DronDlQuery {
 
@@ -26,7 +33,11 @@ public class DronDlQuery {
     String[] arg;
     String dlQueryTxt;
     DronDlQueryTranslator tx;
+
     NodeSet<OWLClass> results;
+    IRI labelIRI = IRI.create("http://www.w3.org/2000/01/rdf-schema#label");
+    IRI rxcuiIRI = IRI.create("http://purl.obolibrary.org/obo/DRON_00010000");
+    Set<OWLOntology> importClosure;
 
     public DronDlQuery() {
 	opt = new Options();
@@ -132,6 +143,7 @@ public class DronDlQuery {
 	OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 	IRI ontologyIRI = IRI.create(cl.getOptionValue("purl"));
 	OWLOntology ontology = manager.loadOntologyFromOntologyDocument(ontologyIRI);
+	importClosure = ontology.getImportsClosure();
 	return ontology;
     }
 
@@ -160,7 +172,41 @@ public class DronDlQuery {
     }
 
     protected void processResults() {
-	
+	PrintStream out = setupOutputStream();
+
+	Set<OWLClass> clsResults = results.getFlattened();
+        for (OWLClass c : clsResults) {
+	    AnnotationExtractor leLabel = new AnnotationExtractor(labelIRI);
+	    AnnotationExtractor leRxcui = new AnnotationExtractor(rxcuiIRI);
+	    for (OWLOntology o : importClosure) {
+		for (OWLAnnotation anno : getAnnotationObjects(c, o)) {
+		    anno.accept(leLabel);
+		    anno.accept(leRxcui);
+		}
+	    }
+	    out.println(leLabel.getResult() + "\t" + c.getIRI().toString() + "\t" + leRxcui.getResult());
+        }
+        
+        out.close();
+    }
+
+    protected PrintStream setupOutputStream() {
+	PrintStream s = null;
+
+	if (cl.hasOption("file")) {
+	    try {
+		File f = new File(cl.getOptionValue("file"));
+		s = new PrintStream(f);
+	    } catch (IOException ioe) {
+		System.err.println("Could not create output file " + cl.getOptionValue("file"));
+		ioe.printStackTrace();
+		System.out.println("Using standard output instead.");
+	    }
+	} 
+
+	if (s == null) s = System.out;
+
+	return s;
     }
 
     public static void main(String[] args) {
