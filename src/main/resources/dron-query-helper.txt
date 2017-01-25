@@ -16,3 +16,4 @@ RxCui	DRON_00010000
 'has granular part'	BFO_0000071
 'nkcc2 inhibitor'	DRON_00020327
 'thiazide / thiazide like'	DRON_00000059
+'mu agonist'	DRON_00000037

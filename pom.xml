@@ -40,11 +40,17 @@
 		 <argument>ca-channel-blocker-rxcuis.txt</argument> 
 	      -->
 
-	    <!-- This query will retrieve all RxCuis for beta blockers that are also anti-hypertensives and output them in a delimited text file called beta-blocker-rxcuis.txt		
+	    <!-- This query will retrieve all RxCuis for beta blockers that are also anti-hypertensives and output them in a delimited text file called beta-blocker-rxcuis.txt		  
 		 <argument>"'drug product' and ('is bearer of' some anti-hypertensive) and (has_proper_part some ('has granular part' some ('is bearer of' some 'beta blocker')))"</argument>
 		 <argument>-output</argument>
 		 <argument>beta-blocker-rxcuis.txt</argument>
-              -->
+            -->
+
+
+	    <!-- This query will retrive all NDCs for packaged drug products with a drug product that is an anti-hypertensive and an ingredient that is a beta blocker -->
+		 <argument>"'packaged drug product' and (has_proper_part some ('is bearer of' some anti-hypertensive) and (has_proper_part some ('has granular part' some ('is bearer of' some 'beta blocker'))))"</argument>
+		 <argument>-output</argument>
+		 <argument>beta-blocker-ndcs.txt</argument>
 
 	    <!-- This query will retrieve all RxCuis for ACE inhibitors that are also anti-hypertensives and output them in a delimited text file called ace-inhibitor-rxcuis.txt		
 		 <argument>"'drug product' and ('is bearer of' some anti-hypertensive) and (has_proper_part some ('has granular part' some ('is bearer of' some 'ACE inhibitor')))"</argument>
@@ -58,16 +64,31 @@
 	    <argument>arb-inhibitor-rxcuis.txt</argument>
                -->
 
-	    <!-- This query will retrieve all RxCuis for loop diuretics that are also anti-hypertensives and output them in a delimited text file called nkcc2-inhibitor-rxcuis.txt -->		
+	    <!-- This query will retrieve all RxCuis for loop diuretics that are also anti-hypertensives and output them in a delimited text file called nkcc2-inhibitor-rxcuis.txt
 	    <argument>"'drug product' and ('is bearer of' some anti-hypertensive) and (has_proper_part some ('has granular part' some ('is bearer of' some 'nkcc2 inhibitor')))"</argument> 
 	    <argument>-output</argument>
 	    <argument>nkcc2-inhibitor-rxcuis.txt</argument>
-	    
+	     -->		
+
 	    <!-- This query will retrieve all RxCuis for thiazide & thiazide-like diuretics that are also anti-hypertensives and output them in a delimited text file called thiazide-rxcuis.txt
 		 <argument>"'drug product' and ('is bearer of' some anti-hypertensive) and (has_proper_part some ('has granular part' some ('is bearer of' some 'thiazide / thiazide like')))"</argument>  
 		 <argument>-output</argument>
 		 <argument>thiazide-rxcuis.txt</argument>
               -->
+
+	    <!-- This query will retrieve all RxCuis for anti-malarial drug products 		
+		 <argument>"'drug product' and ('is bearer of' some anti-malarial)"</argument>
+		 <argument>-output</argument>
+		 <argument>anti-malarial-rxcuis.txt</argument>
+		 -->
+
+
+	    <!-- This query will retrive all RxCuis for analgesics that have an ingredient that is a mu agonist	
+		 <argument>"'drug product' and ('is bearer of' some analgesic) and (has_proper_part some ('has granular part' some ('is bearer of' some 'mu agonist')))"</argument>
+		 <argument>-output</argument>
+		 <argument>analgesic-mu-agonist-rxcuis.txt</argument>
+		 -->
+	
 
           </arguments>
         </configuration>
