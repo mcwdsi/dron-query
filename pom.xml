@@ -47,10 +47,32 @@
             -->
 
 
-	    <!-- This query will retrive all NDCs for packaged drug products with a drug product that is an anti-hypertensive and an ingredient that is a beta blocker -->
+	    <!-- This query will retrive all NDCs for packaged drug products with a drug product that is an anti-hypertensive and an ingredient that is a beta blocker
 		 <argument>"'packaged drug product' and (has_proper_part some ('is bearer of' some anti-hypertensive) and (has_proper_part some ('has granular part' some ('is bearer of' some 'beta blocker'))))"</argument>
 		 <argument>-output</argument>
 		 <argument>beta-blocker-ndcs.txt</argument>
+ -->
+
+
+	    <!-- This query will retrieve all RxCuis for drugs with temozolomize and output them in a delimited text file called temozolomide-rxcuis.txt	  		
+		 <argument>"'drug product' and (has_proper_part some ('has granular part' some DRON_00017608))"</argument>
+		 <argument>-output</argument>
+		 <argument>temozolomide-rxcuis.txt</argument>
+	      -->
+
+
+	    <!-- This query will retrieve all RxCuis for drugs with one of many oral hypoglycemic ingredients and output them in a delimited text file called oral-hypoglycemic-rxcuis.txt	   
+		 <argument>"'drug product' and (has_proper_part some ('has granular part' some (CHEBI_3650 or DRON_00016824 or CHEBI_5441 or CHEBI_5383 or DRON_00017472 or DRON_00018346 or CHEBI_6801 or CHEBI_50122 or CHEBI_8228 or CHEBI_2376 or DRON_00011113 or CHEBI_40237 or DRON_00018127 or DRON_00012482 or CHEBI_28052 or DRON_00011751 or CHEBI_27999)))"</argument>
+		 <argument>-output</argument>
+		 <argument>temozolomide-rxcuis.txt</argument>
+	         -->		
+
+	    <!-- This query will retrieve all RxCuis for drugs with one of many ingredients with MOA for asthma and output them in a delimited text file called asthma-moa-rxcuis.txt	   	         -->		
+		 <argument>"'drug product' and (has_proper_part some ('has granular part' some ('is bearer of' some (DRON_00000061 or DRON_00000064 or DRON_00000062 or DRON_00000067 or DRON_00000060 or DRON_00000069 or DRON_00000071 or DRON_00000063 or DRON_00000066 or DRON_00000068 or DRON_00000070))))"</argument>
+		 <argument>-output</argument>
+		 <argument>asthma-moa-rxcuis.txt</argument>
+
+
 
 	    <!-- This query will retrieve all RxCuis for ACE inhibitors that are also anti-hypertensives and output them in a delimited text file called ace-inhibitor-rxcuis.txt		
 		 <argument>"'drug product' and ('is bearer of' some anti-hypertensive) and (has_proper_part some ('has granular part' some ('is bearer of' some 'ACE inhibitor')))"</argument>
