@@ -1,0 +1,3 @@
+apollofile=./src/main/resources/population/apollo-sv-config.txt
+obcfile=./src/main/resources/population/obc-ide-config.txt
+

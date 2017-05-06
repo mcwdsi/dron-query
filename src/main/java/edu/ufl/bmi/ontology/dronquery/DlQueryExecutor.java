@@ -64,7 +64,11 @@ public final class DlQueryExecutor {
         ManchesterOWLSyntaxClassExpressionParser parser = new ManchesterOWLSyntaxClassExpressionParser(manager.getOWLDataFactory(), new ShortFormEntityChecker(bidiShortFormProvider));
         OWLClassExpression clExp = parser.parse(dlQueryTxt);
        
-        NodeSet<OWLClass> result = reasoner.getSubClasses(clExp, false);        
+        NodeSet<OWLClass> result = reasoner.getSubClasses(clExp, false);    
+	NodeSet<OWLNamedIndividual> instResultFalse = reasoner.getInstances(clExp, false);
+	System.out.println(instResultFalse.getNodes().size());
+	NodeSet<OWLNamedIndividual> instResultTrue = reasoner.getInstances(clExp, true);
+	System.out.println(instResultTrue.getNodes().size());
         return result;
     }
 }

@@ -1,0 +1,4 @@
+file=~/devel/repos/ontology/obc-ide-owl/obc-ide-indexing-instances-and-classes.owl
+iricounter=425
+iribase=http://www.pitt.edu/obc/IDE_
+irilen=10

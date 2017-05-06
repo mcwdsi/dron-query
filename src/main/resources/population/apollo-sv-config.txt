@@ -1,0 +1,5 @@
+file=~/devel/repos/ontology/apollo-sv/src/ontology/apollo-sv.owl
+iricounter=568
+iribase=http://purl.obolibrary.org/obo/APOLLO_SV_
+irilen=8
+

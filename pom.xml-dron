@@ -25,11 +25,9 @@
             <classpath/>
             <argument>edu.ufl.bmi.ontology.dronquery.DronDlQuery</argument>
 	    <argument>-purl</argument>
-	    <argument>https://raw.githubusercontent.com/ufbmi/obc-ide-owl/master/obc-ide-indexing-instances-and-classes.owl?token=ABMe9lxv2MaFf6aedX0pAamCp1NCcNd1ks5ZFcZOwA%3D%3D</argument>
+	    <argument>http://purl.obolibrary.org/obo/dron/dev/dron.owl</argument>
 	    <argument>-query</argument>
-	    <argument>APOLLO_SV_00000516</argument>
-	    <argument>-output</argument>
-	    <argument>host-classes.txt</argument>
+
 	    <!-- This query will retrieve all RxCuis for anti-hypertensive drug products and output them in a delimited text file called anti-hypertensive-rxcuis.txt
 		<argument>"'drug product' and ('is bearer of' some anti-hypertensive)"</argument> 
 	        <argument>-output</argument>
@@ -69,11 +67,10 @@
 		 <argument>temozolomide-rxcuis.txt</argument>
 	         -->		
 
-	    <!-- This query will retrieve all RxCuis for drugs with one of many ingredients with MOA for asthma and output them in a delimited text file called asthma-moa-rxcuis.txt	 
+	    <!-- This query will retrieve all RxCuis for drugs with one of many ingredients with MOA for asthma and output them in a delimited text file called asthma-moa-rxcuis.txt	   	         -->		
 		 <argument>"'drug product' and (has_proper_part some ('has granular part' some ('is bearer of' some (DRON_00000061 or DRON_00000064 or DRON_00000062 or DRON_00000067 or DRON_00000060 or DRON_00000069 or DRON_00000071 or DRON_00000063 or DRON_00000066 or DRON_00000068 or DRON_00000070))))"</argument>
 		 <argument>-output</argument>
 		 <argument>asthma-moa-rxcuis.txt</argument>
-  	         -->		
 
 
 
