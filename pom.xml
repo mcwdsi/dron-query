@@ -25,16 +25,17 @@
             <classpath/>
             <argument>edu.ufl.bmi.ontology.dronquery.DronDlQuery</argument>
 	    <argument>-purl</argument>
-	    <argument>https://raw.githubusercontent.com/ufbmi/obc-ide-owl/master/obc-ide-indexing-instances-and-classes.owl?token=ABMe9lxv2MaFf6aedX0pAamCp1NCcNd1ks5ZFcZOwA%3D%3D</argument>
+	    <!-- <argument>https://raw.githubusercontent.com/ufbmi/obc-ide-owl/master/obc-ide-indexing-instances-and-classes.owl?token=ABMe9lxv2MaFf6aedX0pAamCp1NCcNd1ks5ZFcZOwA%3D%3D</argument> -->
+	    <argument>http://purl.obolibrary.org/obo/dron/dev/dron.owl</argument>
 	    <argument>-query</argument>
-	    <argument>APOLLO_SV_00000516</argument>
+	    <!-- <argument>APOLLO_SV_00000516</argument>
 	    <argument>-output</argument>
-	    <argument>host-classes.txt</argument>
-	    <!-- This query will retrieve all RxCuis for anti-hypertensive drug products and output them in a delimited text file called anti-hypertensive-rxcuis.txt
+	    <argument>host-classes.txt</argument> -->
+	    <!-- This query will retrieve all RxCuis for anti-hypertensive drug products and output them in a delimited text file called anti-hypertensive-rxcuis.txt  -->
 		<argument>"'drug product' and ('is bearer of' some anti-hypertensive)"</argument> 
 	        <argument>-output</argument>
 	        <argument>anti-hypertensive-rxcuis.txt</argument>
-	      -->
+	     
 
 	    <!-- This query will retrieve all RxCuis for calcium channel blockers that are also anti-hypertensives and output them in a delimited text file called ca-channel-blocker-rxcuis.txt
 		 <argument>"'drug product' and ('is bearer of' some anti-hypertensive) and (has_proper_part some ('has granular part' some ('is bearer of' some 'ca channel blocker')))"</argument>

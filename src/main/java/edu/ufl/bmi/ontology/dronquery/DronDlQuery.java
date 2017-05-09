@@ -162,7 +162,8 @@ public class DronDlQuery {
 		reasonerFactoryClassName = "org.semanticweb.elk.owlapi.ElkReasonerFactory";
 	    }
 	} else {
-		reasonerFactoryClassName = "org.semanticweb.elk.owlapi.ElkReasonerFactory";
+	    System.out.println("No reasoner option specified.  Using ELK as default reasoner.");
+	    reasonerFactoryClassName = "org.semanticweb.elk.owlapi.ElkReasonerFactory";
 	}
 
 	OWLReasonerFactory rf = (OWLReasonerFactory)Class.forName(
