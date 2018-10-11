@@ -1,0 +1,2 @@
+echo "java -Xms6G -Xmx6G -cp ./lib/*:./target/classes/:. edu/ufl/bmi/ontology/dronquery/DronDlQuery -purl "$1" -query "OBI_0000047" -from_file -reasoner hermit 1>processed-material-$2.out 2>processed-material-$2.err"
+java -Xms6G -Xmx6G -cp ./lib/*:./target/classes/:. edu/ufl/bmi/ontology/dronquery/DronDlQuery -purl "$1" -query "OBI_0000047" -from_file -reasoner hermit 1>processed-material-$2.out 2>processed-material-$2.err

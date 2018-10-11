@@ -1,0 +1,2 @@
+echo "java -Xms6G -Xmx6G -cp ./lib/*:./target/classes/:. edu/ufl/bmi/ontology/dronquery/DronDlQuery -purl "$1" -query "'packaged drug product'" -from_file -reasoner hermit -output packaged-drug-product-results-$2.txt 1>packaged-drug-product-$2.out 2>packaged-drug-product-$2.err"
+java -Xms6G -Xmx6G -cp ./lib/*:./target/classes/:. edu/ufl/bmi/ontology/dronquery/DronDlQuery -purl "$1" -query "'packaged drug product'" -from_file -reasoner hermit -output packaged-drug-product-results-$2.txt 1>packaged-drug-product-$2.out 2>packaged-drug-product-$2.err
