@@ -10,3 +10,5 @@ buildNumber.properties
 *~
 anti-hypertensive-rxcuis.txt
 ca-channel-blocker-ndcs.txt
+.DS_Store
+lib/
