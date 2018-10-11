@@ -23,9 +23,15 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
+import org.semanticweb.elk.owlapi.ElkReasonerFactory;
+import org.semanticweb.HermiT.Reasoner;
+
 import static org.semanticweb.owlapi.search.EntitySearcher.getAnnotationObjects;
 
 public class DronDlQuery {
+
+	//static final String ELK_REASONER_FACTORY_CLASS_NAME = "org.semanticweb.elk.reasoner.ReasonerFactory";  //0.4.3
+	static final String ELK_REASONER_FACTORY_CLASS_NAME = "org.semanticweb.elk.owlapi.ElkReasonerFactory";  //0.4.0
 
     Options opt;
     CommandLineParser clp;
@@ -46,6 +52,14 @@ public class DronDlQuery {
 	    .hasArg()
 	    .desc("the permanent URL to the Drug Ontology")
 	    .longOpt("purl")
+	    .required()
+	    .build();
+
+	Option ff = Option.builder("f")
+	    .argName("from file")
+	    .hasArg(false)
+	    .desc("whether the PURL points to the file")
+	    .longOpt("from_file")
 	    .required()
 	    .build();
 
@@ -79,6 +93,7 @@ public class DronDlQuery {
 	    .build();
 
 	opt.addOption(purl);
+	opt.addOption(ff);
 	opt.addOption(out);
 	opt.addOption(query);
 	opt.addOption(txfile);
@@ -141,7 +156,14 @@ public class DronDlQuery {
 
     protected OWLOntology loadOntology() throws OWLOntologyCreationException {
 	OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-	IRI ontologyIRI = IRI.create(cl.getOptionValue("purl"));
+
+	IRI ontologyIRI;
+	if (cl.hasOption("from_file")) {
+		File f = new File(cl.getOptionValue("purl"));
+		ontologyIRI = IRI.create(f);
+	} else {
+		ontologyIRI = IRI.create(cl.getOptionValue("purl"));
+	}
 	OWLOntology ontology = manager.loadOntologyFromOntologyDocument(ontologyIRI);
 	importClosure = ontology.getImportsClosure();
 	return ontology;
@@ -153,17 +175,18 @@ public class DronDlQuery {
 	if (cl.hasOption("reasoner")) {
 	    String optValue = cl.getOptionValue("reasoner");
 	    if (optValue.equals("elk")) {
-		reasonerFactoryClassName = "org.semanticweb.elk.owlapi.ElkReasonerFactory";
+		//reasonerFactoryClassName = "org.semanticweb.elk.owlapi.ElkReasonerFactory";
+	    reasonerFactoryClassName = ELK_REASONER_FACTORY_CLASS_NAME;
 	    } else if (optValue.equals("hermit")) {
-		reasonerFactoryClassName = "";
+		reasonerFactoryClassName = "org.semanticweb.HermiT.ReasonerFactory";
 	    } else {
 		System.err.println("Unrecognized reasoner option: " + optValue);
 		System.err.println("using elk reasoner instead");
-		reasonerFactoryClassName = "org.semanticweb.elk.owlapi.ElkReasonerFactory";
+		reasonerFactoryClassName = ELK_REASONER_FACTORY_CLASS_NAME;
 	    }
 	} else {
 	    System.out.println("No reasoner option specified.  Using ELK as default reasoner.");
-	    reasonerFactoryClassName = "org.semanticweb.elk.owlapi.ElkReasonerFactory";
+	    reasonerFactoryClassName = ELK_REASONER_FACTORY_CLASS_NAME;
 	}
 
 	OWLReasonerFactory rf = (OWLReasonerFactory)Class.forName(
