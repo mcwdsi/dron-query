@@ -37,10 +37,11 @@ public class DronDlQuery {
     CommandLineParser clp;
     CommandLine cl;
     String[] arg;
-    String dlQueryTxt;
+    String[] dlQueryTxt;
+    PrintStream[] outStream;
     DronDlQueryTranslator tx;
 
-    NodeSet<OWLClass> results;
+    NodeSet<OWLClass>[] results;
     IRI labelIRI = IRI.create("http://www.w3.org/2000/01/rdf-schema#label");
     IRI rxcuiIRI = IRI.create("http://purl.obolibrary.org/obo/DRON_00010000");
     Set<OWLOntology> importClosure;
@@ -65,17 +66,19 @@ public class DronDlQuery {
 
 	Option out = Option.builder("f")
 	    .argName("output file")
-	    .hasArg()
+	    .hasArgs()
 	    .desc("the output will go to this file")
 	    .optionalArg(true)
 	    .longOpt("output")
+	    .valueSeparator(',')
 	    .build();
 
 	Option query = Option.builder("q")
 	    .argName("DL query string")
-	    .hasArg()
+	    .hasArgs()
 	    .required()
 	    .longOpt("query")
+	    .valueSeparator(',')
 	    .build();
 
 	Option txfile = Option.builder("t")
@@ -103,7 +106,8 @@ public class DronDlQuery {
     public void runQuery(String[] arg) {
 	try {
 	    getCommandLine(arg);
-            setupQuery();
+        setupQuery();
+        setupOutputStream();
 	    runQuery();
 	} catch (ParseException e) {
 	    System.err.println("Error parsing command line.");
@@ -118,15 +122,20 @@ public class DronDlQuery {
     }
 
     protected void setupQuery() {
-	String queryTxt = cl.getOptionValue("query");
-	System.out.println(queryTxt);
+	String[] queryTxt = cl.getOptionValues("query");
+	System.out.println(queryTxt[0]);
 	if (cl.hasOption("txfile")) {
 	    tx = new DronDlQueryTranslator(cl.getOptionValue("txfile"));
 	} else {
 	    tx = new DronDlQueryTranslator("./src/main/resources/dron-query-helper.txt");
 	}
-	dlQueryTxt = tx.translateQuery(queryTxt);
-	System.out.println(dlQueryTxt);
+	dlQueryTxt = new String[queryTxt.length];
+	results = new NodeSet[queryTxt.length];
+	for (int i=0; i<queryTxt.length; i++) {
+		dlQueryTxt[i] = tx.translateQuery(queryTxt[i]);
+	}
+	
+	System.out.println(dlQueryTxt[0]);
     }
 
 
@@ -136,8 +145,10 @@ public class DronDlQuery {
 	    OWLReasonerFactory rf = createReasonerFactory();
 	    DlQueryExecutor dqe = new DlQueryExecutor(rf, o);
 	    
-	    results = dqe.runQuery(dlQueryTxt);
-	    processResults();
+	    for (int i=0; i<dlQueryTxt.length; i++) {
+	    	results[i] = dqe.runQuery(dlQueryTxt[i]);
+	    	processResults(results[i], outStream[i]);
+	    }
 
 	} catch (OWLOntologyCreationException ooce) {
 	    System.err.println("Could not create the ontology");
@@ -195,11 +206,12 @@ public class DronDlQuery {
 	return rf;
     }
 
-    protected void processResults() {
-	PrintStream out = setupOutputStream();
+    protected void processResults(NodeSet<OWLClass> result,
+    	PrintStream out) {
+	
 
-	Set<OWLClass> clsResults = results.getFlattened();
-        for (OWLClass c : clsResults) {
+	Set<OWLClass> clsResult = result.getFlattened();
+        for (OWLClass c : clsResult) {
 	    AnnotationExtractor leLabel = new AnnotationExtractor(labelIRI);
 	    AnnotationExtractor leRxcui = new AnnotationExtractor(rxcuiIRI);
 	    for (OWLOntology o : importClosure) {
@@ -214,13 +226,16 @@ public class DronDlQuery {
         out.close();
     }
 
-    protected PrintStream setupOutputStream() {
-	PrintStream s = null;
+    protected void setupOutputStream() {
+	outStream = new PrintStream[dlQueryTxt.length];
 
 	if (cl.hasOption("output")) {
 	    try {
-		File f = new File(cl.getOptionValue("output"));
-		s = new PrintStream(f);
+	    String[] vals = cl.getOptionValues("output");
+	    for (int i=0; i<vals.length; i++) {
+			File f = new File(vals[i]);
+			outStream[i] = new PrintStream(f);
+		}
 	    } catch (IOException ioe) {
 		System.err.println("Could not create output file " + cl.getOptionValue("output"));
 		ioe.printStackTrace();
@@ -228,9 +243,9 @@ public class DronDlQuery {
 	    }
 	} 
 
-	if (s == null) s = System.out;
-
-	return s;
+	for (int i=0; i<outStream.length; i++) {
+		if (outStream[i] == null) outStream[i] = System.out;
+	}
     }
 
     public static void main(String[] args) {
