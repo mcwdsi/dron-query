@@ -29,9 +29,19 @@ public final class DlQueryExecutor {
 
     private OWLReasoner reasoner;
 
+    ManchesterOWLSyntaxClassExpressionParser parser;
+
     public DlQueryExecutor(OWLReasonerFactory reasonerFactory, OWLOntology inputOntology) {
         this.reasonerFactory = reasonerFactory;
         ontology = inputOntology;
+
+        OWLOntologyManager manager = ontology.getOWLOntologyManager();
+        ShortFormProvider sfp = new SimpleShortFormProvider();
+        Set<OWLOntology> importClosure = ontology.getImportsClosure();
+        BidirectionalShortFormProvider bidiShortFormProvider = new BidirectionalShortFormProviderAdapter(manager, importClosure, sfp);
+        
+        parser = new ManchesterOWLSyntaxClassExpressionParser(manager.getOWLDataFactory(), new ShortFormEntityChecker(bidiShortFormProvider));
+
     }
 
     private String labelFor(OWLClass clazz) {
@@ -52,23 +62,17 @@ public final class DlQueryExecutor {
 
 
     public NodeSet<OWLClass> runQuery(String dlQueryTxt) {
-	if (reasoner == null) {
-	    reasoner = reasonerFactory.createNonBufferingReasoner(ontology);
-	}
+	   if (reasoner == null) {
+	       reasoner = reasonerFactory.createNonBufferingReasoner(ontology);
+	   }
 
-	OWLOntologyManager manager = ontology.getOWLOntologyManager();
-        ShortFormProvider sfp = new SimpleShortFormProvider();
-        Set<OWLOntology> importClosure = ontology.getImportsClosure();
-        BidirectionalShortFormProvider bidiShortFormProvider = new BidirectionalShortFormProviderAdapter(manager, importClosure, sfp);
-        
-        ManchesterOWLSyntaxClassExpressionParser parser = new ManchesterOWLSyntaxClassExpressionParser(manager.getOWLDataFactory(), new ShortFormEntityChecker(bidiShortFormProvider));
         OWLClassExpression clExp = parser.parse(dlQueryTxt);
-       
         NodeSet<OWLClass> result = reasoner.getSubClasses(clExp, false);    
-	NodeSet<OWLNamedIndividual> instResultFalse = reasoner.getInstances(clExp, false);
-	System.out.println(instResultFalse.getNodes().size());
-	NodeSet<OWLNamedIndividual> instResultTrue = reasoner.getInstances(clExp, true);
-	System.out.println(instResultTrue.getNodes().size());
+	
+        //NodeSet<OWLNamedIndividual> instResultFalse = reasoner.getInstances(clExp, false);
+	    //System.out.println(instResultFalse.getNodes().size());
+	    //NodeSet<OWLNamedIndividual> instResultTrue = reasoner.getInstances(clExp, true);
+	    //System.out.println(instResultTrue.getNodes().size());
         return result;
     }
 }

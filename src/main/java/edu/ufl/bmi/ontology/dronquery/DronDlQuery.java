@@ -123,7 +123,8 @@ public class DronDlQuery {
 
     protected void setupQuery() {
 	String[] queryTxt = cl.getOptionValues("query");
-	System.out.println(queryTxt[0]);
+	for (String query : queryTxt)
+		System.out.println(query);
 	if (cl.hasOption("txfile")) {
 	    tx = new DronDlQueryTranslator(cl.getOptionValue("txfile"));
 	} else {
@@ -134,8 +135,8 @@ public class DronDlQuery {
 	for (int i=0; i<queryTxt.length; i++) {
 		dlQueryTxt[i] = tx.translateQuery(queryTxt[i]);
 	}
-	
-	System.out.println(dlQueryTxt[0]);
+	for (String dlQuery : dlQueryTxt)
+		System.out.println(dlQuery);
     }
 
 
