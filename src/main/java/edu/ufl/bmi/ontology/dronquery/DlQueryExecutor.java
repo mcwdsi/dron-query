@@ -61,18 +61,24 @@ public final class DlQueryExecutor {
     }
 
 
-    public NodeSet<OWLClass> runQuery(String dlQueryTxt) {
+    public DronDlQueryResult runQuery(String dlQueryTxt, boolean includeIndividuals) {
 	   if (reasoner == null) {
 	       reasoner = reasonerFactory.createNonBufferingReasoner(ontology);
 	   }
 
         OWLClassExpression clExp = parser.parse(dlQueryTxt);
+        DronDlQueryResult ddqr = new DronDlQueryResult();
         NodeSet<OWLClass> result = reasoner.getSubClasses(clExp, false);    
-	
-        //NodeSet<OWLNamedIndividual> instResultFalse = reasoner.getInstances(clExp, false);
-	    //System.out.println(instResultFalse.getNodes().size());
-	    //NodeSet<OWLNamedIndividual> instResultTrue = reasoner.getInstances(clExp, true);
-	    //System.out.println(instResultTrue.getNodes().size());
-        return result;
+	    ddqr.addClassResults(result);
+
+        if (includeIndividuals) {
+           NodeSet<OWLNamedIndividual> instResultFalse = reasoner.getInstances(clExp, false);
+	       System.out.println(instResultFalse.getNodes().size());
+	       NodeSet<OWLNamedIndividual> instResultTrue = reasoner.getInstances(clExp, true);
+	       System.out.println(instResultTrue.getNodes().size());
+           ddqr.addIndividualResults(instResultTrue);
+
+       }
+        return ddqr;
     }
 }

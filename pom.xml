@@ -8,9 +8,12 @@
   <name>dron-query</name>
   <url>http://maven.apache.org</url>
 <properties>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
-  </properties>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+    <compilerArgument>-Xlint:unchecked</compilerArgument>
+    <compilerArgument>-Xlint:deprecated</compilerArgument>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+</properties>
   <build>
   <plugins>
   <plugin>
