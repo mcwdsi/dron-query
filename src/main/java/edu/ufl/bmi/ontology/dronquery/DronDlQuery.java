@@ -20,6 +20,7 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
@@ -41,7 +42,7 @@ public class DronDlQuery {
     PrintStream[] outStream;
     DronDlQueryTranslator tx;
 
-    NodeSet<OWLClass>[] results;
+    DronDlQueryResult[] results;
     IRI labelIRI = IRI.create("http://www.w3.org/2000/01/rdf-schema#label");
     IRI rxcuiIRI = IRI.create("http://purl.obolibrary.org/obo/DRON_00010000");
     Set<OWLOntology> importClosure;
@@ -95,12 +96,20 @@ public class DronDlQuery {
 	    .longOpt("reasoner")
 	    .build();
 
+	Option includeIndividuals = Option.builder("i")
+		.argName("flag to include individuals or not")
+		.hasArg(false)
+		.required(false)
+		.longOpt("individuals")
+		.build();
+
 	opt.addOption(purl);
 	opt.addOption(ff);
 	opt.addOption(out);
 	opt.addOption(query);
 	opt.addOption(txfile);
 	opt.addOption(reasoner);
+	opt.addOption(includeIndividuals);
     }
 
     public void runQuery(String[] arg) {
@@ -131,7 +140,7 @@ public class DronDlQuery {
 	    tx = new DronDlQueryTranslator("./src/main/resources/dron-query-helper.txt");
 	}
 	dlQueryTxt = new String[queryTxt.length];
-	results = new NodeSet[queryTxt.length];
+	results = new DronDlQueryResult[queryTxt.length];
 	for (int i=0; i<queryTxt.length; i++) {
 		dlQueryTxt[i] = tx.translateQuery(queryTxt[i]);
 	}
@@ -145,9 +154,10 @@ public class DronDlQuery {
 	    OWLOntology o = loadOntology();
 	    OWLReasonerFactory rf = createReasonerFactory();
 	    DlQueryExecutor dqe = new DlQueryExecutor(rf, o);
+	    boolean includeInds = cl.hasOption("individuals");
 	    
 	    for (int i=0; i<dlQueryTxt.length; i++) {
-	    	results[i] = dqe.runQuery(dlQueryTxt[i]);
+	    	results[i] = dqe.runQuery(dlQueryTxt[i], includeInds);
 	    	processResults(results[i], outStream[i]);
 	    }
 
@@ -207,11 +217,11 @@ public class DronDlQuery {
 	return rf;
     }
 
-    protected void processResults(NodeSet<OWLClass> result,
+    protected void processResults(DronDlQueryResult result,
     	PrintStream out) {
 	
 
-	Set<OWLClass> clsResult = result.getFlattened();
+	Set<OWLClass> clsResult = result.getClassResults().getFlattened();
         for (OWLClass c : clsResult) {
 	    AnnotationExtractor leLabel = new AnnotationExtractor(labelIRI);
 	    AnnotationExtractor leRxcui = new AnnotationExtractor(rxcuiIRI);
@@ -221,7 +231,20 @@ public class DronDlQuery {
 		    anno.accept(leRxcui);
 		}
 	    }
-	    out.println(leLabel.getResult() + "\t" + c.getIRI().toString() + "\t" + leRxcui.getResult());
+	    out.println(leLabel.getResult() + "\t" + c.getIRI().toString() + "\t" + leRxcui.getResult() + "\t" + "OWLClass");
+        }
+
+       Set<OWLNamedIndividual> indResult = result.getIndividualResults().getFlattened();
+        for (OWLNamedIndividual i : indResult) {
+	    AnnotationExtractor leLabel = new AnnotationExtractor(labelIRI);
+	    AnnotationExtractor leRxcui = new AnnotationExtractor(rxcuiIRI);
+	    for (OWLOntology o : importClosure) {
+		for (OWLAnnotation anno : getAnnotationObjects(i, o)) {
+		    anno.accept(leLabel);
+		    anno.accept(leRxcui);
+		}
+	    }
+	    out.println(leLabel.getResult() + "\t" + i.getIRI().toString() + "\t" + leRxcui.getResult() + "\t" + "OWLNamedIndividual");
         }
         
         out.close();
