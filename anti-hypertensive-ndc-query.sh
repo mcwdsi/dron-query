@@ -1,4 +1,4 @@
-java -Xms8G -Xmx8G -cp ./target/lib/*:./target/classes/:. edu/ufl/bmi/ontology/dronquery/DronDlQuery -purl "$1" -from_file -reasoner hermit \
+java -Xms16G -Xmx16G -cp ./target/lib/*:./target/classes/:. edu/ufl/bmi/ontology/dronquery/DronDlQuery -purl "$1" -from_file -reasoner hermit \
 \
 -query "'packaged drug product' and (has_proper_part some ('drug product' and ('is bearer of' some anti-hypertensive)))",\
 "'packaged drug product' and (has_proper_part some ('drug product' and ('is bearer of' some anti-hypertensive) and (has_proper_part some ('has granular part' some ('is bearer of' some 'beta blocker')))))",\
