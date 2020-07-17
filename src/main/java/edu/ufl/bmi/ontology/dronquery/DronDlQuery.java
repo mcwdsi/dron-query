@@ -158,7 +158,7 @@ public class DronDlQuery {
 	    
 	    for (int i=0; i<dlQueryTxt.length; i++) {
 	    	results[i] = dqe.runQuery(dlQueryTxt[i], includeInds);
-	    	processResults(results[i], outStream[i]);
+	    	processResults(results[i], outStream[i], includeInds);
 	    }
 
 	} catch (OWLOntologyCreationException ooce) {
@@ -218,7 +218,7 @@ public class DronDlQuery {
     }
 
     protected void processResults(DronDlQueryResult result,
-    	PrintStream out) {
+    	PrintStream out, boolean includeInds) {
 	
 
 	Set<OWLClass> clsResult = result.getClassResults().getFlattened();
@@ -234,6 +234,7 @@ public class DronDlQuery {
 	    out.println(leLabel.getResult() + "\t" + c.getIRI().toString() + "\t" + leRxcui.getResult() + "\t" + "OWLClass");
         }
 
+        if (includeInds) {
        Set<OWLNamedIndividual> indResult = result.getIndividualResults().getFlattened();
         for (OWLNamedIndividual i : indResult) {
 	    AnnotationExtractor leLabel = new AnnotationExtractor(labelIRI);
@@ -246,6 +247,7 @@ public class DronDlQuery {
 	    }
 	    out.println(leLabel.getResult() + "\t" + i.getIRI().toString() + "\t" + leRxcui.getResult() + "\t" + "OWLNamedIndividual");
         }
+    	}
         
         out.close();
     }

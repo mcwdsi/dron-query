@@ -1,2 +1,2 @@
-echo "java -Xms8G -Xmx8G -cp ./target/lib/*:./target/classes/:. edu/ufl/bmi/ontology/dronquery/DronDlQuery -purl "$1" -query "\"DRON_00000005 and DRON_00000027\"" -from_file -reasoner hermit -output dp-vs-pdp-results-$2.txt 1>dp-vs-pdp-$2.out 2>dp-vs-pdp-$2.err"
+echo "java -Xms16G -Xmx16G -cp ./target/lib/*:./target/classes/:. edu/ufl/bmi/ontology/dronquery/DronDlQuery -purl "$1" -query "\"DRON_00000005 and DRON_00000027\"" -from_file -reasoner hermit -output dp-vs-pdp-results-$2.txt 1>dp-vs-pdp-$2.out 2>dp-vs-pdp-$2.err"
 java -Xms8G -Xmx8G -cp ./target/lib/*:./target/classes/:. edu/ufl/bmi/ontology/dronquery/DronDlQuery -purl "$1" -query "DRON_00000005 and DRON_00000027" -from_file -reasoner hermit -output dp-vs-pdp-results-$2.txt 1>dp-vs-pdp-$2.out 2>dp-vs-pdp-$2.err
