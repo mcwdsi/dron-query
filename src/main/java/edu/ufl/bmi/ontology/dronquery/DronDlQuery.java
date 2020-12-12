@@ -17,12 +17,14 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.PrefixManager;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.util.DefaultPrefixManager;
 
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.HermiT.Reasoner;
@@ -46,6 +48,7 @@ public class DronDlQuery {
     IRI labelIRI = IRI.create("http://www.w3.org/2000/01/rdf-schema#label");
     IRI rxcuiIRI = IRI.create("http://purl.obolibrary.org/obo/DRON_00010000");
     Set<OWLOntology> importClosure;
+    PrefixManager pm;
 
     public DronDlQuery() {
 	opt = new Options();
@@ -110,6 +113,9 @@ public class DronDlQuery {
 	opt.addOption(txfile);
 	opt.addOption(reasoner);
 	opt.addOption(includeIndividuals);
+
+		pm = new DefaultPrefixManager();
+    	pm.setPrefix("dq:","https://purl.obolibrary.org/obo/dron/dron-query/");
     }
 
     public void runQuery(String[] arg) {
@@ -154,10 +160,14 @@ public class DronDlQuery {
 	    OWLOntology o = loadOntology();
 	    OWLReasonerFactory rf = createReasonerFactory();
 	    DlQueryExecutor dqe = new DlQueryExecutor(rf, o);
+	    dqe.addQueriesAsClassesToOntology(this.dlQueryTxt);
 	    boolean includeInds = cl.hasOption("individuals");
+
+	    dqe.precomputeInferences(includeInds);
 	    
 	    for (int i=0; i<dlQueryTxt.length; i++) {
-	    	results[i] = dqe.runQuery(dlQueryTxt[i], includeInds);
+	    	//results[i] = dqe.runQuery(dlQueryTxt[i], includeInds);
+	    	results[i] = dqe.getQueryResult(i, includeInds);
 	    	processResults(results[i], outStream[i], includeInds);
 	    }
 
