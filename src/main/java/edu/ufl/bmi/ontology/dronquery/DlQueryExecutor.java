@@ -10,6 +10,7 @@ import org.semanticweb.owlapi.expression.ShortFormEntityChecker;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntaxClassExpressionParser;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.InferenceType;
+import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
@@ -90,11 +91,17 @@ public final class DlQueryExecutor {
         }
     }
 
-    public DronDlQueryResult getQueryResult(int queryNum, boolean includeInds) {
+    public DronDlQueryResult getQueryResult(int queryNum, boolean includeInds, boolean includeEquivalentNamedClasses) {
         OWLClass clsQuery = this.df.getOWLClass(this.clsNames[queryNum], pm);
         NodeSet<OWLClass> result = reasoner.getSubClasses(clsQuery, false);
         DronDlQueryResult ddqr = new DronDlQueryResult();
         ddqr.addClassResults(result);
+
+        if (includeEquivalentNamedClasses) {
+            Node<OWLClass> clsResult = reasoner.getEquivalentClasses(clsQuery);
+            if (!result.isEmpty())
+                ddqr.addClassResult(clsResult);
+        }
         if (includeInds) {
             NodeSet<OWLNamedIndividual> instResultFalse = reasoner.getInstances(clsQuery, false);
             System.out.println(instResultFalse.getNodes().size());
@@ -106,7 +113,7 @@ public final class DlQueryExecutor {
     }
 
 
-    public DronDlQueryResult runQuery(String dlQueryTxt, boolean includeIndividuals) {
+    public DronDlQueryResult runQuery(String dlQueryTxt, boolean includeIndividuals, boolean includeEquivalentNamedClasses) {
 	   if (reasoner == null) {
 	       reasoner = reasonerFactory.createNonBufferingReasoner(ontology);
 	   }
@@ -115,6 +122,12 @@ public final class DlQueryExecutor {
         DronDlQueryResult ddqr = new DronDlQueryResult();
         NodeSet<OWLClass> result = reasoner.getSubClasses(clExp, false);    
 	    ddqr.addClassResults(result);
+
+        if (includeEquivalentNamedClasses) {
+            Node<OWLClass> clsResult = reasoner.getEquivalentClasses(clExp);
+            if (!result.isEmpty())
+                ddqr.addClassResult(clsResult);
+        }
 
         if (includeIndividuals) {
            NodeSet<OWLNamedIndividual> instResultFalse = reasoner.getInstances(clExp, false);

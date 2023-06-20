@@ -68,7 +68,7 @@ public class DronDlQuery {
 	    .required()
 	    .build();
 
-	Option out = Option.builder("f")
+	Option out = Option.builder("o")
 	    .argName("output file")
 	    .hasArgs()
 	    .desc("the output will go to this file")
@@ -106,6 +106,13 @@ public class DronDlQuery {
 		.longOpt("individuals")
 		.build();
 
+	Option includeEquivalentClasses = Option.builder("e")
+		.argName("flag to include named equivalent classes or not")
+		.hasArg(false)
+		.required(false)
+		.longOpt("equiv")
+		.build();
+
 	opt.addOption(purl);
 	opt.addOption(ff);
 	opt.addOption(out);
@@ -113,6 +120,7 @@ public class DronDlQuery {
 	opt.addOption(txfile);
 	opt.addOption(reasoner);
 	opt.addOption(includeIndividuals);
+	opt.addOption(includeEquivalentClasses);
 
 		pm = new DefaultPrefixManager();
     	pm.setPrefix("dq:","https://purl.obolibrary.org/obo/dron/dron-query/");
@@ -162,12 +170,13 @@ public class DronDlQuery {
 	    DlQueryExecutor dqe = new DlQueryExecutor(rf, o);
 	    dqe.addQueriesAsClassesToOntology(this.dlQueryTxt);
 	    boolean includeInds = cl.hasOption("individuals");
+	    boolean includeEquivCls = cl.hasOption("equiv");
 
 	    dqe.precomputeInferences(includeInds);
 	    
 	    for (int i=0; i<dlQueryTxt.length; i++) {
 	    	//results[i] = dqe.runQuery(dlQueryTxt[i], includeInds);
-	    	results[i] = dqe.getQueryResult(i, includeInds);
+	    	results[i] = dqe.getQueryResult(i, includeInds, includeEquivCls);
 	    	processResults(results[i], outStream[i], includeInds);
 	    }
 
@@ -231,7 +240,7 @@ public class DronDlQuery {
     	PrintStream out, boolean includeInds) {
 	
 
-	Set<OWLClass> clsResult = result.getClassResults().getFlattened();
+	Set<OWLClass> clsResult = result.getClassResults();
         for (OWLClass c : clsResult) {
 	    AnnotationExtractor leLabel = new AnnotationExtractor(labelIRI);
 	    AnnotationExtractor leRxcui = new AnnotationExtractor(rxcuiIRI);
@@ -245,7 +254,7 @@ public class DronDlQuery {
         }
 
         if (includeInds) {
-       Set<OWLNamedIndividual> indResult = result.getIndividualResults().getFlattened();
+       Set<OWLNamedIndividual> indResult = result.getIndividualResults();
         for (OWLNamedIndividual i : indResult) {
 	    AnnotationExtractor leLabel = new AnnotationExtractor(labelIRI);
 	    AnnotationExtractor leRxcui = new AnnotationExtractor(rxcuiIRI);

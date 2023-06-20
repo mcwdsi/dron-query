@@ -1,32 +1,43 @@
 package edu.ufl.bmi.ontology.dronquery;
 
+import java.util.Set;
+import java.util.HashSet;
+
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 
 public class DronDlQueryResult {
-	NodeSet<OWLClass> classResults;
-	NodeSet<OWLNamedIndividual> individualResults;
+	Set<OWLClass> classResults;
+	Set<OWLNamedIndividual> individualResults;
 
 	public void addClassResults(NodeSet<OWLClass> clsResult) {
-		if (classResults == null) classResults = clsResult;
+		if (classResults == null) classResults = clsResult.getFlattened();
 		else {
-			System.err.println("Accumulating OWLClass results not yet supported.");
+			classResults.addAll(clsResult.getFlattened());
 		}
+	}
+
+	public void addClassResult(Node<OWLClass> clsResult) {
+		if (classResults == null) {
+			classResults = new HashSet<OWLClass>();
+		}
+		classResults.addAll(clsResult.getEntities());
 	}
 
 	public void addIndividualResults(NodeSet<OWLNamedIndividual> indResult) {
-		if (individualResults == null) individualResults = indResult;
+		if (individualResults == null) individualResults = indResult.getFlattened();
 		else {
-			System.err.println("Accumulating OWLNamedIndividual results not yet supported.");	
+			individualResults.addAll(indResult.getFlattened());
 		}
 	}
 
-	public NodeSet<OWLClass> getClassResults() {
+	public Set<OWLClass> getClassResults() {
 		return classResults;
 	}
 
-	public NodeSet<OWLNamedIndividual> getIndividualResults() {
+	public Set<OWLNamedIndividual> getIndividualResults() {
 		return individualResults;
 	}
 }
